@@ -1,25 +1,19 @@
 package commands;
-
-import dataprocessing.PrintStrategyFactory;
 import shop.Shop;
+
 
 public class SwitchDisplayMode implements Command{
     private Shop shop;
-    private final String path;
+    private String[] info;
 
-    public SwitchDisplayMode (String path) {
+    public SwitchDisplayMode (String ...args) {
         this.shop = Shop.getInstance();
-        this.path = path;
+        info = args;
     }
     @Override
     public void execute() {
-        if (path.equals("CONSOLE")) {
-            shop.output.close();
-            shop.output = PrintStrategyFactory.createStrategy("CONSOLE");
+        shop.storage.write("SWITCH DISPLAY_MODE " + String.join(" ", info));
+        shop.storage.switchPrintStrategy(info[0], java.util
+                .Arrays.stream(info, 1, info.length).toArray(String[]::new));
         }
-
-        shop.write("SWITCH DISPLAY_MODE FILE " + path);
-        shop.output.close();
-        shop.output = PrintStrategyFactory.createStrategy("FILE", path);
-    }
 }

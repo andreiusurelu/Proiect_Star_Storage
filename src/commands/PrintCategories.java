@@ -11,6 +11,6 @@ public class PrintCategories implements Command{
     @Override
     public void execute() {
         shop.write("PRINT CATEGORIES");
-        shop.showCategories();
+        shop.storage.showCategories();
     }
 }

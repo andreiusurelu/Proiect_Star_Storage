@@ -1,14 +1,15 @@
 package main;
 
 import utils.VariableException;
-
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        Client client = new Client("D:\\324cdb-andreiusurelu-master\\Proiect_Star_Storage\\output.json");
+        //de pus fisier cu properties pentru baza de date
         Scanner scan = new Scanner(System.in);
+
+        Client client = new Client(args[0]);
 
         System.out.println("Type HELP to show available commands");
 
@@ -88,15 +89,9 @@ public class Main {
                         if (!parameters[1].equals("DISPLAY_MODE")) {
                             throw new VariableException.InvalidCommand();
                         }
-                        if (parameters[2].equals("CONSOLE")) {
-                            client.executeAction("SWITCH DISPLAY_MODE", parameters[2]);
-                        }
-                        else if (parameters[2].equals("FILE")) {
-                            client.executeAction("SWITCH DISPLAY_MODE", parameters[3]);
-                        }
-                        else {
-                            throw new VariableException.InvalidCommand();
-                        }
+                        String[] arguments = java.util.Arrays
+                                .stream(parameters, 2, parameters.length).toArray(String[]::new);
+                        client.executeAction("SWITCH DISPLAY_MODE", arguments);
                     }
 
                     default ->
@@ -107,7 +102,6 @@ public class Main {
             catch (VariableException.InvalidCommand e) {
                 //de implementat cu logger gestionarea erorilor/exceptiilor
                 System.out.println(e.getMessage());
-                e.printStackTrace();
             }
         }
     }

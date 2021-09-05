@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import shop.Consumer;
-import shop.Product;
-import shop.Shop;
+import datastorage.DataStructureStorageStrategy;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,10 +17,10 @@ public class InputLoader implements VariableException{
     public InputLoader(final String inputPath) {
         this.inputPath = inputPath;
     }
-    public void readInput(){
+    public void readInput(DataStructureStorageStrategy storage){
 
-        Shop shop = Shop.getInstance();
-        int quantity, price, maxQuantity, balance;
+
+        int balance;
         try {
             ObjectMapper map = new ObjectMapper();
             final ObjectNode jsonObject = map.readValue(new File(inputPath), ObjectNode.class);
@@ -42,15 +40,15 @@ public class InputLoader implements VariableException{
                 if (Constants.isIncorrectName(category)) {
                     throw new InvalidInputValueError("Category " + category + " is invalid!");
                 }
-                if (!shop.hasCategory(category)) {
-                    shop.addCategory(category);
+                if (!storage.hasCategory(category)) {
+                    storage.addCategory(category);
                 }
 
                 String name = jsonStock.get(Constants.NAME).toString().replace("\"", "");
                 if (Constants.isIncorrectName(name)) {
                     throw new InvalidInputValueError("Name " + name + " is invalid!");
                 }
-                if (shop.hasProduct(category, name)) {
+                if (storage.hasProduct(name, category)) {
                     throw new OverrideInputError("Product " + name + "of category " + category +
                             " already exists!");
                 }
@@ -58,18 +56,15 @@ public class InputLoader implements VariableException{
                 if (Constants.isIncorrectNumber(quantityString)) {
                     throw new InvalidInputValueError("Quantity " + quantityString + " is invalid!");
                 }
-                quantity = Integer.parseInt(quantityString);
                 String priceString = jsonStock.get(Constants.PRICE).toString().replace("\"", "");
                 if (Constants.isIncorrectNumber(priceString)) {
                     throw new InvalidInputValueError("Price " + priceString + " is invalid!");
                 }
-                price = Integer.parseInt(priceString);
                 String maxQuantityString = jsonStock.get(Constants.MAXQUANTITY).toString();
                 if (Constants.isIncorrectNumber(maxQuantityString)) {
                     throw new InvalidInputValueError("maxQuantity " + maxQuantityString + " is invalid!");
                 }
-                maxQuantity = Integer.parseInt(maxQuantityString);
-                shop.addProduct(category, name, new Product(name, quantity, price, maxQuantity));
+                storage.addProduct(name, category, quantityString, priceString, maxQuantityString);
             }
             for (Object jsonConsumer : jsonConsumers) {
                 String username = ((ObjectNode) jsonConsumer).get(Constants.USERNAME).toString()
@@ -83,7 +78,7 @@ public class InputLoader implements VariableException{
                     throw new InvalidInputValueError("Consumer's balance " + balanceString + " is invalid!");
                 }
                 balance = Integer.parseInt(balanceString);
-                shop.addClient(new Consumer(username, balance));
+                storage.addClient(username, balance);
             }
         }
 

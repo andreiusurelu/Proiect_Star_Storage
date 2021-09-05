@@ -1,7 +1,7 @@
 package main;
 
 import commands.*;
-import utils.InputLoader;
+import shop.Shop;
 import utils.VariableException;
 
 import java.io.IOException;
@@ -9,10 +9,10 @@ import java.io.IOException;
 public class Client {
     private final Invoker invoker;
 
-    Client(String inputPath) {
+    Client(String propertyFilePath) {
         invoker = new Invoker();
-        InputLoader loader = new InputLoader(inputPath);
-        loader.readInput();
+        Shop shop = Shop.getInstance();
+        shop.initializeStorage(propertyFilePath);
     }
 
     public void executeAction(String commandName, String ...args) {
@@ -41,7 +41,7 @@ public class Client {
             case PRINT_PRODUCTS_CATEGORY -> new PrintProductsCategory(args[0]);
             case REMOVE_PRODUCT -> new RemoveProduct(args[0]);
             case REPLENISH -> new Replenish(args[0], args[1]);
-            case SWITCH_DISPLAY_MODE -> new SwitchDisplayMode(args[0]);
+            case SWITCH_DISPLAY_MODE -> new SwitchDisplayMode(args);
             case EXPORT -> new Export(args[0]);
             case EXIT -> new Exit();
             case HELP -> new Help();

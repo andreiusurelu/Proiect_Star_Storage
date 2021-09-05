@@ -44,6 +44,7 @@ public final class Constants {
 
     public static boolean isIncorrectNumber(String number) {
         try {
+            System.out.println(number);
             int n = Integer.parseInt(number);
             return n <= 0;
         }

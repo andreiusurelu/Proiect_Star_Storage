@@ -1,0 +1,43 @@
+{
+  "stock" : [ {
+    "category" : "ELECTRONICS",
+    "name" : "TELEFON",
+    "quantity" : 30,
+    "price" : 100,
+    "maxQuantity" : 200
+  }, {
+    "category" : "food",
+    "name" : "milk",
+    "quantity" : 80,
+    "price" : 10,
+    "maxQuantity" : 200
+  }, {
+    "category" : "drinks",
+    "name" : "cola",
+    "quantity" : 100,
+    "price" : 20,
+    "maxQuantity" : 500
+  }, {
+    "category" : "drinks",
+    "name" : "sprite",
+    "quantity" : 80,
+    "price" : 20,
+    "maxQuantity" : 500
+  }, {
+    "category" : "clothes",
+    "name" : "shirt",
+    "quantity" : 100,
+    "price" : 50,
+    "maxQuantity" : 100
+  }, {
+    "category" : "drinks",
+    "name" : "schweppes",
+    "quantity" : 37,
+    "price" : 10,
+    "maxQuantity" : 200
+  } ],
+  "clients" : [ {
+    "username" : "John",
+    "balance" : null
+  } ]
+}

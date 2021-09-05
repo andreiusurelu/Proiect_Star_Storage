@@ -12,10 +12,10 @@ public class PrintProductsCategory implements Command {
     @Override
     public void execute() {
         shop.write("PRINT PRODUCTS CATEGORY " + category);
-        if (!shop.hasCategory(category)) {
+        if (!shop.storage.hasCategory(category)) {
             shop.write("Category " + category + " doesn't exist!");
             return;
         }
-        shop.showByCategory(category);
+        shop.storage.showByCategory(category);
     }
 }

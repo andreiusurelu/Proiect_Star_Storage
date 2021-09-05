@@ -11,6 +11,9 @@ public class Exit implements Command{
     public void execute() {
         shop.write("EXIT");
         shop.write("Quitting program...");
-        shop.output.close();
+        shop.storage.closeConnections();
+    }
+    public void undo() {
+
     }
 }

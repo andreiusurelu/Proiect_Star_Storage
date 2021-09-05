@@ -4,6 +4,8 @@ import shop.Shop;
 import utils.Constants;
 import utils.VariableException;
 
+import java.sql.SQLException;
+
 public class PrintProducts implements Command{
     private Shop shop;
     private final String productName;
@@ -19,10 +21,10 @@ public class PrintProducts implements Command{
             throw new VariableException.InvalidCommandValueException("Invalid name");
         }
         shop.write("PRINT PRODUCTS " + productName);
-        if (shop.noSuchProduct(productName)) {
+        if (shop.storage.noSuchProduct(productName)) {
             shop.write("Product " + productName + " doesn't exist.");
             return;
         }
-        shop.showProduct(productName);
+            shop.storage.showProduct(productName);
     }
 }

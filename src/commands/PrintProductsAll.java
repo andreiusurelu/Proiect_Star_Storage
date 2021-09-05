@@ -12,6 +12,6 @@ public class PrintProductsAll implements Command{
     @Override
     public void execute(){
         shop.write("PRINT PRODUCTS ALL");
-        shop.showAll();
+        shop.storage.showAll();
     }
 }

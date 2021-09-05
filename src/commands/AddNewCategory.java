@@ -1,8 +1,6 @@
 package commands;
 
 import shop.Shop;
-import utils.Constants;
-import utils.VariableException;
 
 public class AddNewCategory implements Command{
     private Shop shop;
@@ -13,17 +11,9 @@ public class AddNewCategory implements Command{
     }
 
     @Override
-    public void execute() throws VariableException.InvalidCommandValueException,
-            VariableException.OverrideCommandException {
-        if (Constants.isIncorrectName(name)) {
-            throw new VariableException.InvalidCommandValueException("Invalid Name");
-        }
-        if (shop.hasCategory(name)) {
-            throw new VariableException.OverrideCommandException("Category " + name + " already exists");
-        }
+    public void execute(){
 
         shop.write("ADD NEW CATEGORY" + name);
-        shop.write("Category added");
-        shop.addCategory(name);
+        shop.storage.addCategory(name);
     }
 }
