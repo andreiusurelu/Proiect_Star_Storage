@@ -5,7 +5,6 @@ import datastorage.StorageStrategyFactory;
 
 public class Shop {
     public StorageStrategy storage;
-    //public PrintStrategy output = PrintStrategyFactory.createStrategy("CONSOLE");
     private static Shop instance = null;
 
     private Shop() {

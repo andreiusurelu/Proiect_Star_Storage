@@ -17,5 +17,6 @@ public interface PrintStrategy {
     /**
      * Closes any connection or file.
      */
+    //de facut o alta interfata care sa extinda PrintStrategy si sa aiba close.
     void close();
 }
