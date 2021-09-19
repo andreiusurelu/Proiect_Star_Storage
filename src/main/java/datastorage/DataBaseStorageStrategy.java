@@ -3,6 +3,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dataprocessing.PrintStrategy;
 import dataprocessing.PrintStrategyFactory;
+import shop.Product;
 import utils.Constants;
 import utils.VariableException;
 
@@ -43,10 +44,39 @@ public class DataBaseStorageStrategy implements StorageStrategy{
     }
 
     @Override
+    public void removeCategory(String categoryName) {
+        try {
+            statement.executeQuery("DELETE FROM " +
+                    "categories WHERE categoryName = '" + categoryName + "'");
+        }
+        catch (SQLException ex) {
+            output.print("SQLException: " + ex.getMessage());
+            output.print("SQLState: " + ex.getSQLState());
+            output.print("VendorError: " + ex.getErrorCode());
+        }
+    }
+
+    @Override
     public void addClient(String consumerUsername, int consumerBalance) {
         try (ResultSet res = statement.executeQuery("INSERT INTO consumers(consumerUsername, consumerBalance) " +
                 "VALUES ('" + consumerUsername + "', " + consumerBalance + ")")) {
             output.print("Client added.");
+        }
+        catch (SQLException ex) {
+            output.print("SQLException: " + ex.getMessage());
+            output.print("SQLState: " + ex.getSQLState());
+            output.print("VendorError: " + ex.getErrorCode());
+        }
+    }
+
+    @Override
+    public void addProduct(String productName, String productCategory, int productQuantity,
+                           int productPrice, int productMaxQuantity) {
+        try {
+            statement.executeQuery("INSERT INTO products(productName, productCategory," +
+                    "productQuantity, productPrice, productMaxQuantity) VALUES ('" + productName +
+                    "','" + productCategory + "'," + productQuantity + ","
+                    + productPrice + "," + productMaxQuantity + ")");
         }
         catch (SQLException ex) {
             output.print("SQLException: " + ex.getMessage());
@@ -71,7 +101,26 @@ public class DataBaseStorageStrategy implements StorageStrategy{
             output.print("SQLState: " + ex.getSQLState());
             output.print("VendorError: " + ex.getErrorCode());
         }
+    }
 
+    public Product getProduct(String productName) {
+        try (ResultSet res = statement.executeQuery("SELECT productName, productQuantity, " +
+                "productCategory, productPrice, productMaxQuantity FROM products WHERE productName = '"
+                + productName + "'")){
+            if (res.next()) {
+                return new Product(res.getString("productName"),
+                        res.getString("productCategory"),
+                        res.getInt("productQuantity"),
+                                res.getInt("productPrice"),
+                                res.getInt("productMaxQuantity"));
+            }
+        }
+        catch (SQLException ex) {
+            output.print("SQLException: " + ex.getMessage());
+            output.print("SQLState: " + ex.getSQLState());
+            output.print("VendorError: " + ex.getErrorCode());
+        }
+        return null;
     }
 
     @Override
@@ -89,15 +138,29 @@ public class DataBaseStorageStrategy implements StorageStrategy{
     }
 
     @Override
+    public void removeProduct(String productName, String categoryName) {
+        try {
+            statement.executeQuery("DELETE FROM products WHERE productName = '" + productName
+            + "' AND productCategory = '" + categoryName + "'");
+        }
+        catch (SQLException ex) {
+            output.print("SQLException: " + ex.getMessage());
+            output.print("SQLState: " + ex.getSQLState());
+            output.print("VendorError: " + ex.getErrorCode());
+        }
+    }
+
+    @Override
     public void showAll() {
         try (ResultSet res = statement.executeQuery("SELECT ROW_NUMBER() OVER(ORDER BY productID) " +
                 "AS row_num, productName, productQuantity, productCategory, " +
                 "productPrice FROM products")) {
 
             while(res.next()) {
-                output.print(res.getInt(1) + " " + res.getString(2) + " "
-                + res.getInt(3) + " " + res.getString(4) + " "
-                        + res.getInt(5));
+                output.print(res.getInt("row_num")
+                        + " " + res.getString("productName")
+                        + " " + res.getInt("productQuantity")
+                        + " " + res.getString("productCategory"));
 
             }
         }
@@ -115,8 +178,10 @@ public class DataBaseStorageStrategy implements StorageStrategy{
                 "productCategory = '" + categoryName + "'")) {
 
             while(res.next()) {
-                output.print(res.getInt(1) + " " + res.getString(2) + " " +
-                        res.getInt(3) + " " + res.getInt(4));
+                output.print(res.getInt("row_num") + " " +
+                        res.getString("productName") + " " +
+                        res.getInt("productQuantity") + " " +
+                        res.getInt("productPrice"));
             }
         }
         catch (SQLException ex) {
@@ -149,8 +214,9 @@ public class DataBaseStorageStrategy implements StorageStrategy{
         try (ResultSet res = statement.executeQuery("SELECT productName, productQuantity, " +
                 "productPrice FROM products WHERE productName = '" + productName + "'")){
             if (res.next()) {
-                output.print(res.getString(1) + " " + res.getInt(2) +
-                        " " + res.getInt(3));
+                output.print(res.getString("productName") + " " +
+                        res.getInt("productQuantity") +
+                        " " + res.getInt("productPrice"));
             }
         }
         catch (SQLException ex) {
@@ -225,8 +291,19 @@ public class DataBaseStorageStrategy implements StorageStrategy{
 
     @Override
     public void switchPrintStrategy(String strategyName, String... args) {
-        output.close();
-        output = PrintStrategyFactory.createStrategy(strategyName, args);
+        try {
+            PrintStrategy printStrategy = PrintStrategyFactory
+                    .createStrategy(strategyName, args);
+            if (printStrategy == null) {
+                throw new VariableException
+                        .InvalidCommandValueException("Failed to fetch a valid print strategy");
+            }
+            output.close();
+            output = printStrategy;
+        }
+        catch (VariableException.InvalidCommandValueException ex) {
+            output.print(ex.getMessage());
+        }
     }
 
     public String getPrintStrategy() {
@@ -240,6 +317,20 @@ public class DataBaseStorageStrategy implements StorageStrategy{
                     "productQuantity + " + addedQuantity +
                     " WHERE productName = '" + productName + "'");
             write("Product " + productName + " replenished.");
+        }
+        catch (SQLException ex) {
+            write("SQLException: " + ex.getMessage());
+            write("SQLState: " + ex.getSQLState());
+            write("VendorError: " + ex.getErrorCode());
+        }
+    }
+
+    @Override
+    public void decrementProductQuantity(String productName, String substractedQuantity) {
+        try {
+            statement.executeQuery("UPDATE products SET productQuantity =" +
+                    "productQuantity - " + substractedQuantity + " WHERE productName = '" +
+                    productName + "'");
         }
         catch (SQLException ex) {
             write("SQLException: " + ex.getMessage());
@@ -277,6 +368,23 @@ public class DataBaseStorageStrategy implements StorageStrategy{
         }
         catch (VariableException.InvalidCommandValueException ex) {
             write(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void undoTransaction(String consumerUsername, String productName,
+                                String productQuantityString) {
+        try {
+            statement.executeQuery("UPDATE products SET productQuantity = productQuantity + " +
+                    productQuantityString + " WHERE productName = '" + productName + "'");
+            statement.executeQuery("UPDATE consumers SET consumerBalance = consumerBalance + " +
+                    productQuantityString + " * (SELECT productPrice FROM products WHERE productName = '" +
+                    productName + "')");
+        }
+        catch (SQLException ex) {
+            write("SQLException: " + ex.getMessage());
+            write("SQLState: " + ex.getSQLState());
+            write("VendorError: " + ex.getErrorCode());
         }
     }
 

@@ -1,5 +1,8 @@
 package main;
 
+import configurations.AppConfig;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import utils.VariableException;
 import java.util.Scanner;
 
@@ -9,7 +12,10 @@ public class Main {
         //de pus fisier cu properties pentru baza de date
         Scanner scan = new Scanner(System.in);
 
-        Client client = new Client(args[0]);
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        Client client = context.getBean("client", Client.class);
+
+//        Client client = new Client(args[0]);
 
         System.out.println("Type HELP to show available commands");
 
@@ -17,11 +23,16 @@ public class Main {
             try {
                 String line = scan.nextLine();
                 String[] parameters = line.split(" ");
+                //client.executeAction(line);
                 switch (parameters[0]) {
+                    case "UNDO" ->
+                        client.undoAction();
+                    case  "REDO" ->
+                        client.redoAction();
                     case "HELP" ->
-                            client.executeAction("HELP");
+                        client.executeAction("HELP");
                     case "EXPORT" ->
-                            client.executeAction("EXPORT", parameters[1]);
+                        client.executeAction("EXPORT", parameters[1]);
                     case "EXIT" -> {
                         client.executeAction("EXIT");
                         return;

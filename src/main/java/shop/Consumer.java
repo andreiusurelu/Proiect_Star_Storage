@@ -9,6 +9,10 @@ public class Consumer {
         balance = newBalance;
     }
 
+    public void increment(int sum) {
+        balance += sum;
+    }
+
     public void decrement(int sum) {
         balance -= sum;
     }

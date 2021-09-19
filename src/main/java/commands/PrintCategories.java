@@ -3,14 +3,19 @@ package commands;
 import shop.Shop;
 
 public class PrintCategories implements Command{
-    public Shop shop;
-    public PrintCategories () {
-        this.shop = Shop.getInstance();
+    private Shop shop;
+    public PrintCategories (Shop shop) {
+        this.shop = shop;
     }
 
     @Override
     public void execute() {
         shop.write("PRINT CATEGORIES");
-        shop.storage.showCategories();
+        shop.showCategories();
+    }
+
+    @Override
+    public void undo() {
+
     }
 }

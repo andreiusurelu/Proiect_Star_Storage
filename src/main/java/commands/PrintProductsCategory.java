@@ -3,19 +3,25 @@ package commands;
 import shop.Shop;
 
 public class PrintProductsCategory implements Command {
-    public Shop shop;
+    private Shop shop;
     private final String category;
-    public PrintProductsCategory(String category){
-        this.shop = Shop.getInstance();
+    public PrintProductsCategory(Shop shop, String category){
+        this.shop = shop;
         this.category = category;
     }
+
     @Override
     public void execute() {
         shop.write("PRINT PRODUCTS CATEGORY " + category);
-        if (!shop.storage.hasCategory(category)) {
+        if (shop.noSuchCategory(category)) {
             shop.write("Category " + category + " doesn't exist!");
             return;
         }
-        shop.storage.showByCategory(category);
+        shop.showByCategory(category);
+    }
+
+    @Override
+    public void undo() {
+
     }
 }

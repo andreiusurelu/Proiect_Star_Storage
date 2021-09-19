@@ -24,7 +24,7 @@ public class DataStructureStorageStrategy implements StorageStrategy{
         loader.readInput(this);
     }
 
-    private Product getProduct(String productName) {
+    public Product getProduct(String productName) {
         for (String category : products.keySet()) {
             if (products.get(category).containsKey(productName)) {
                 return products.get(category).get(productName);
@@ -62,8 +62,20 @@ public class DataStructureStorageStrategy implements StorageStrategy{
     }
 
     @Override
+    public void removeCategory(String categoryName) {
+        products.get(categoryName).clear();
+        products.remove(categoryName);
+    }
+
+    @Override
     public void addClient(String consumerUsername, int consumerBalance) {
         consumers.add(new Consumer(consumerUsername, consumerBalance));
+    }
+
+    public void addProduct(String productName, String productCategory,
+                           int quantity, int price, int maxQuantity) {
+        products.get(productCategory).put(productName, new Product(productName, productCategory,
+                quantity, price, maxQuantity));
     }
 
     @Override
@@ -91,7 +103,8 @@ public class DataStructureStorageStrategy implements StorageStrategy{
             }
 
             products.get(productCategory).put(productName,
-                    new Product(productName, Integer.parseInt(productQuantityString),
+                    new Product(productName, productCategory,
+                            Integer.parseInt(productQuantityString),
                             Integer.parseInt(productPriceString),
                             Integer.parseInt(productMaxQuantityString)));
             write(productQuantityString + " " + productName + " have been added to " + productCategory + " category");
@@ -101,6 +114,7 @@ public class DataStructureStorageStrategy implements StorageStrategy{
             write(ex.getMessage());
         }
     }
+
 
     @Override
     public void removeProduct(String productName) {
@@ -121,6 +135,11 @@ public class DataStructureStorageStrategy implements StorageStrategy{
         catch (VariableException.InvalidCommandValueException e) {
             write(e.getMessage());
         }
+    }
+
+    @Override
+    public void removeProduct(String productName, String categoryName) {
+        products.get(categoryName).remove(productName);
     }
 
     @Override
@@ -196,8 +215,19 @@ public class DataStructureStorageStrategy implements StorageStrategy{
 
     @Override
     public void switchPrintStrategy(String strategyName, String ...args) {
-        output.close();
-        output = PrintStrategyFactory.createStrategy(strategyName, args);
+        try {
+            PrintStrategy printStrategy = PrintStrategyFactory
+                    .createStrategy(strategyName, args);
+            if (printStrategy == null) {
+                throw new VariableException
+                        .InvalidCommandValueException("Failed to fetch a valid print strategy");
+            }
+            output.close();
+            output = printStrategy;
+        }
+        catch (VariableException.InvalidCommandValueException ex) {
+            output.print(ex.getMessage());
+        }
     }
 
     @Override
@@ -216,6 +246,24 @@ public class DataStructureStorageStrategy implements StorageStrategy{
             }
             p.increment(addedQuantity);
             output.print("Product " + productName + " replenished.");
+        }
+        catch (VariableException.InvalidCommandValueException ex) {
+            output.print(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void decrementProductQuantity(String productName, String substractedQuantity) {
+        try {
+            Product p = getProduct(productName);
+            if (p == null) {
+                throw new VariableException.InvalidCommandValueException("Invalid product name");
+            }
+            if (substractedQuantity == null) {
+                throw new VariableException.InvalidCommandValueException("Invalid quantity value");
+            }
+            int sub = Integer.parseInt(substractedQuantity);
+            p.decrement(sub);
         }
         catch (VariableException.InvalidCommandValueException ex) {
             output.print(ex.getMessage());
@@ -265,7 +313,31 @@ public class DataStructureStorageStrategy implements StorageStrategy{
             }
             c.decrement(quantity * p.getPrice());
             p.decrement(quantity);
-            output.print("User " + consumerUsername + " has bought " + quantity + " " + productName + ".");
+            output.print("User " + consumerUsername + " has bought " +
+                    quantity + " " + productName + ".");
+        }
+        catch (VariableException.InvalidCommandValueException ex) {
+            output.print(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void undoTransaction(String consumerUsername, String productName,
+                                String productQuantityString) {
+        try {
+            int quantity = Integer.parseInt(productQuantityString);
+            Consumer c = getConsumer(consumerUsername);
+            Product p = getProduct(productName);
+            if (c == null) {
+                throw new VariableException.InvalidCommandValueException("Failed to fetch " +
+                        "consumer " + consumerUsername);
+            }
+            if (p == null) {
+                throw new VariableException.InvalidCommandValueException("Failed to fetch " +
+                        "product " + productName);
+            }
+            c.increment(quantity * p.getPrice());
+            p.increment(quantity);
         }
         catch (VariableException.InvalidCommandValueException ex) {
             output.print(ex.getMessage());

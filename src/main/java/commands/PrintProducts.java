@@ -4,15 +4,17 @@ import shop.Shop;
 import utils.Constants;
 import utils.VariableException;
 
-import java.sql.SQLException;
-
 public class PrintProducts implements Command{
     private Shop shop;
     private final String productName;
 
-    public PrintProducts(String product) {
-        this.shop = Shop.getInstance();
+    public PrintProducts(Shop shop, String product) {
+        this.shop = shop;
         this.productName = product;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     @Override
@@ -21,10 +23,15 @@ public class PrintProducts implements Command{
             throw new VariableException.InvalidCommandValueException("Invalid name");
         }
         shop.write("PRINT PRODUCTS " + productName);
-        if (shop.storage.noSuchProduct(productName)) {
+        if (shop.noSuchProduct(productName)) {
             shop.write("Product " + productName + " doesn't exist.");
             return;
         }
-            shop.storage.showProduct(productName);
+            shop.showProduct(productName);
+    }
+
+    @Override
+    public void undo() {
+
     }
 }

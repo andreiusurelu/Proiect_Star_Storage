@@ -27,7 +27,7 @@ public class Writer {
 
 
     public ObjectNode writeFile(Shop shop){
-        return shop.storage.toObjectNode();
+        return shop.toObjectNode();
     }
 
     public void closeJSON(final ObjectNode object) {

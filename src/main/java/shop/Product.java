@@ -2,12 +2,15 @@ package shop;
 
 public class Product {
     private String name;
+    private String category;
     private int quantity;
     private int price;
     private int maxQuantity;
 
-    public Product (String newName, int newQuantity, int newPrice, int newMaxQuantity) {
+    public Product (String newName, String newCategory,
+                    int newQuantity, int newPrice, int newMaxQuantity) {
         name = newName;
+        category = newCategory;
         quantity = newQuantity;
         price = newPrice;
         maxQuantity = newMaxQuantity;
@@ -28,6 +31,10 @@ public class Product {
 
     public String getName() {
         return name;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public int getQuantity() {

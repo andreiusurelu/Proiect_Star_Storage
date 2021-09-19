@@ -15,7 +15,9 @@ public enum CommandType {
     SWITCH_DISPLAY_MODE("SWITCH DISPLAY_MODE"),
     EXIT("EXIT"),
     HELP("HELP"),
-    EXPORT("EXPORT");
+    EXPORT("EXPORT"),
+    UNDO("UNDO"),
+    REDO("REDO");
 
 
     public final String text;

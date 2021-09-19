@@ -9,8 +9,8 @@ import utils.Writer;
 public class Export implements Command{
     private Shop shop;
     private final String outputPath;
-    public Export(String outputPath) {
-        this.shop = Shop.getInstance();
+    public Export(Shop shop, String outputPath) {
+        this.shop = shop;
         String extractedPath = outputPath.replaceAll("\"","");
         if (SystemUtils.IS_OS_WINDOWS) {
             this.outputPath = extractedPath.replace("\\", "\\\\");
@@ -19,6 +19,8 @@ public class Export implements Command{
             this.outputPath = extractedPath;
         }
     }
+
+
     @Override
     public void execute() throws VariableException.InvalidCommandValueException {
         shop.write("EXPORT " + outputPath);
@@ -26,5 +28,10 @@ public class Export implements Command{
         writer.setJsonFile(outputPath);
         ObjectNode obj = writer.writeFile(shop);
         writer.closeJSON(obj);
+    }
+
+    @Override
+    public void undo() {
+
     }
 }
