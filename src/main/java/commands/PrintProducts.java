@@ -1,37 +1,25 @@
 package commands;
 
-import shop.Shop;
-import utils.Constants;
-import utils.VariableException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import main_components.Shop;
 
-public class PrintProducts implements Command{
+public class PrintProducts implements SimpleCommand{
     private Shop shop;
     private final String productName;
+    private static final Logger logger = LogManager.getLogger(PrintProducts.class);
 
     public PrintProducts(Shop shop, String product) {
         this.shop = shop;
         this.productName = product;
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
+
 
     @Override
-    public void execute() throws VariableException.InvalidCommandValueException {
-        if (Constants.isIncorrectName(productName)) {
-            throw new VariableException.InvalidCommandValueException("Invalid name");
-        }
+    public void execute(){
+        logger.info("PRINT PRODUCTS " + productName);
         shop.write("PRINT PRODUCTS " + productName);
-        if (shop.noSuchProduct(productName)) {
-            shop.write("Product " + productName + " doesn't exist.");
-            return;
-        }
-            shop.showProduct(productName);
-    }
-
-    @Override
-    public void undo() {
-
+        shop.showProduct(productName);
     }
 }

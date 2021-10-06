@@ -1,6 +1,8 @@
 package dataprocessing;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utils.Constants;
 import utils.VariableException;
 
@@ -12,30 +14,31 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class OutputFilePrintStrategy implements PrintStrategy{
-    private File file;
+    private static final Logger logger
+            = LogManager.getLogger(OutputFilePrintStrategy.class);
+    private String filePath = null;
     private BufferedWriter bufferedWriter;
     public OutputFilePrintStrategy(String filePath) {
         try {
             String extractedFilePath;
             if (SystemUtils.IS_OS_WINDOWS) {
                 extractedFilePath = filePath.replace("\"", "").replace("\\", "\\\\");
-            }
-            else {
+            } else {
                 extractedFilePath = filePath.replace("\"", "");
             }
-            file = new File(extractedFilePath);
-            file.createNewFile();
-
-            if (Constants.isPathValid(extractedFilePath)) {
+            if (!Constants.isPathValid(extractedFilePath)) {
+                logger.error(new VariableException.InvalidCommandValueException("Invalid path " + extractedFilePath));
+            }
+            File file = new File(extractedFilePath);
+            if (file.createNewFile()) {
                 this.bufferedWriter = new BufferedWriter(new FileWriter(file, true));
             }
             else {
-                throw new VariableException
-                        .InvalidCommandValueException("Invalid path: " + extractedFilePath);
+                logger.error("Failed to create file.");
             }
         }
-        catch (IOException | VariableException.InvalidCommandValueException e) {
-            e.printStackTrace();
+        catch (IOException e) {
+            logger.error("Can't open file");
         }
     }
 
@@ -51,6 +54,7 @@ public class OutputFilePrintStrategy implements PrintStrategy{
         }
     }
 
+
     @Override
     public String getStrategyDescription() {
         return "This strategy will print to a given output file, and it will append the " +
@@ -59,7 +63,7 @@ public class OutputFilePrintStrategy implements PrintStrategy{
 
     @Override
     public String getDisplayMode() {
-        return "FILE " + file.getAbsolutePath();
+        return "FILE " + filePath;
     }
 
     @Override

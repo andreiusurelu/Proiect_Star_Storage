@@ -1,4 +1,4 @@
-import main.Main;
+import main_components.Main;
 
 public class Test {
     public static void main(String[] args) {

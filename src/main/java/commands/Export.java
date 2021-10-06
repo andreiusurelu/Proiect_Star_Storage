@@ -1,14 +1,15 @@
 package commands;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.SystemUtils;
-import shop.Shop;
-import utils.VariableException;
-import utils.Writer;
+import main_components.Shop;
 
-public class Export implements Command{
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class Export implements SimpleCommand{
     private Shop shop;
     private final String outputPath;
+    private static final Logger logger = LogManager.getLogger(Export.class);
     public Export(Shop shop, String outputPath) {
         this.shop = shop;
         String extractedPath = outputPath.replaceAll("\"","");
@@ -22,16 +23,9 @@ public class Export implements Command{
 
 
     @Override
-    public void execute() throws VariableException.InvalidCommandValueException {
+    public void execute() {
+        logger.info("EXPORT " + outputPath);
         shop.write("EXPORT " + outputPath);
-        Writer writer = new Writer();
-        writer.setJsonFile(outputPath);
-        ObjectNode obj = writer.writeFile(shop);
-        writer.closeJSON(obj);
-    }
-
-    @Override
-    public void undo() {
-
+        shop.exportData("JSON", outputPath);
     }
 }

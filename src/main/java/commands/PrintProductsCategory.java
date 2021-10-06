@@ -1,10 +1,13 @@
 package commands;
 
-import shop.Shop;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import main_components.Shop;
 
-public class PrintProductsCategory implements Command {
+public class PrintProductsCategory implements SimpleCommand {
     private Shop shop;
     private final String category;
+    private static final Logger logger = LogManager.getLogger(PrintProductsCategory.class);
     public PrintProductsCategory(Shop shop, String category){
         this.shop = shop;
         this.category = category;
@@ -12,16 +15,8 @@ public class PrintProductsCategory implements Command {
 
     @Override
     public void execute() {
+        logger.info("PRINT PRODUCTS CATEGORY " + category);
         shop.write("PRINT PRODUCTS CATEGORY " + category);
-        if (shop.noSuchCategory(category)) {
-            shop.write("Category " + category + " doesn't exist!");
-            return;
-        }
         shop.showByCategory(category);
-    }
-
-    @Override
-    public void undo() {
-
     }
 }
