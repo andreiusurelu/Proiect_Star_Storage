@@ -2,16 +2,16 @@ package commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import main_components.Shop;
+import main_components.Receiver;
 
 public class Replenish implements UndoableCommand{
-    private Shop shop;
+    private Receiver receiver;
     private final String productName;
     private final String quantityString;
     private static final Logger logger = LogManager.getLogger(Replenish.class);
 
-    public Replenish(Shop shop, String productName, String quantity) {
-        this.shop = shop;
+    public Replenish(Receiver receiver, String productName, String quantity) {
+        this.receiver = receiver;
         this.productName = productName;
         this.quantityString =quantity;
     }
@@ -19,14 +19,14 @@ public class Replenish implements UndoableCommand{
     @Override
     public void execute() {
         logger.info("REPLENISH PRODUCT " + productName + " " + quantityString);
-        shop.write("REPLENISH PRODUCT " + productName + " " + quantityString);
-        shop.replenish(productName, quantityString);
+        receiver.write("REPLENISH PRODUCT " + productName + " " + quantityString);
+        receiver.replenish(productName, quantityString);
     }
 
     @Override
     public void undo() {
         logger.info("Action undone: REPLENISH PRODUCT " + productName + " " + quantityString);
-        shop.write("Action undone: REPLENISH PRODUCT " + productName + " " + quantityString);
-        shop.undoReplenish(productName, quantityString);
+        receiver.write("Action undone: REPLENISH PRODUCT " + productName + " " + quantityString);
+        receiver.undoReplenish(productName, quantityString);
     }
 }

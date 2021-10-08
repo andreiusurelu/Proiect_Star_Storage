@@ -20,7 +20,7 @@ import javax.persistence.*;
 
 
 @Component
-public class Shop {
+public class Shop implements Receiver {
     private static final Logger logger = LogManager.getLogger(Shop.class);
     private static final EntityManagerFactory factory = Persistence
             .createEntityManagerFactory("entity");
@@ -62,11 +62,14 @@ public class Shop {
     }
 
     public void showDisplayMode() {
-        output.print(output.getDisplayMode());
+        String displayMode = output.getDisplayMode();
+        output.print(displayMode);
+        logger.info(displayMode);
     }
 
     public void write(String message) {
         output.print(message);
+        logger.info(message);
     }
 
     public void addNewCategory(String categoryName) {
@@ -281,6 +284,12 @@ public class Shop {
         }
         catch (IllegalStateException e) {
             logger.warn("Incorrect transaction state at: " + e.getLocalizedMessage());
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        catch (PersistenceException e) {
+            logger.error("A persistence exception appeared: ", e);
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -868,7 +877,7 @@ public class Shop {
             query.setParameter("productName", productName);
             String resultString = query.getSingleResult().toString();
             output.print(resultString);
-            logger.info(resultString);
+            //logger.info(resultString);
         }
         catch (Exception e) {
             logger.error("An exception was thrown: ", e);
@@ -1185,20 +1194,16 @@ public class Shop {
     }
 
 
-    public void switchDisplayMode(String strategyName, String ...args) {
+    public void switchDisplayMode(String url) {
         PrintStrategy printStrategy = PrintStrategyFactory
-                .createStrategy(strategyName, args);
+                .createStrategy(url);
         if (printStrategy == null) {
-            logger.warn("Invalid print strategy: " + strategyName);
+            logger.error("Invalid print strategy");
             return;
         }
         output.close();
         output = printStrategy;
     }
-
-//    public ObjectNode toObjectNode() {
-//        return storage.toObjectNode();
-//    }
 
     public void exportData(String fileType, String filePath) {
         Parser parser = ParserFactory.createParser(fileType);

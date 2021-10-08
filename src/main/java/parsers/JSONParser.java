@@ -8,7 +8,7 @@ import entity.Consumer;
 import entity.Product;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import main_components.Shop;
+import main_components.Receiver;
 import utils.Constants;
 
 import javax.persistence.EntityManager;
@@ -42,14 +42,20 @@ public class JSONParser implements Parser{
     }
 
     @Override
-    public void writeToFile(Shop shop) {
+    public void writeToFile(Receiver receiver) {
         EntityManager entityManager = factory.createEntityManager();
         try {
             List<Category> categoryList = entityManager.createNamedQuery("Category.printEntries").getResultList();
             List<Consumer> consumerList = entityManager.createNamedQuery("Consumer.printEntries").getResultList();
 
             if (consumerList.isEmpty()) {
-                logger.error("EMPTY LIST!!!");
+                logger.error("Consumer list is empty!");
+                return;
+            }
+
+            if (categoryList.isEmpty()) {
+                logger.error("Category list is empty!");
+                return;
             }
 
             ObjectMapper mapper = new ObjectMapper();
@@ -63,7 +69,6 @@ public class JSONParser implements Parser{
             }
             catch (NoSuchFieldException | IllegalAccessException e) {
                 logger.error("An exception occured: ", e);
-                closeFile();
                 return;
             }
 
@@ -95,7 +100,7 @@ public class JSONParser implements Parser{
             main.put(Constants.CLIENTS, consumerArray);
 
             jsonFile.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(main));
-            jsonFile.close();
+            //jsonFile.close();
         }
         catch (Exception e) {
             logger.error("An exception occured: ", e);
@@ -107,6 +112,11 @@ public class JSONParser implements Parser{
 
     @Override
     public void closeFile() {
-
+        try {
+            jsonFile.close();
+        }
+        catch (IOException e) {
+            logger.error("Failed to close file!");
+        }
     }
 }

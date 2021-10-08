@@ -2,15 +2,15 @@ package commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import main_components.Shop;
+import main_components.Receiver;
 
 public class AddNewCategory implements UndoableCommand{
-    private Shop shop;
+    private Receiver receiver;
     private final String name;
     private static final Logger logger = LogManager.getLogger(AddNewCategory.class);
 
-    public AddNewCategory(Shop shop, String name) {
-        this.shop = shop;
+    public AddNewCategory(Receiver receiver, String name) {
+        this.receiver = receiver;
         this.name = name;
     }
 
@@ -18,14 +18,14 @@ public class AddNewCategory implements UndoableCommand{
     @Override
     public void execute(){
         logger.info("ADD NEW CATEGORY" + name);
-        shop.write("ADD NEW CATEGORY " + name);
-        shop.addNewCategory(name);
+        receiver.write("ADD NEW CATEGORY " + name);
+        receiver.addNewCategory(name);
     }
 
     @Override
     public void undo() {
         logger.info("Action undone: ADD NEW CATEGORY " + name);
-        shop.write("Action undone: ADD NEW CATEGORY " + name);
-        shop.undoAddNewCategory(name);
+        receiver.write("Action undone: ADD NEW CATEGORY " + name);
+        receiver.undoAddNewCategory(name);
     }
 }

@@ -1,25 +1,21 @@
 package dataprocessing;
 
-public class PrintStrategyFactory {
-    public static PrintStrategy createStrategy(String strategyName, String ...args) {
-        try {
-            PrintType type = PrintType.fromString(strategyName);
-            if (type == null) {
-                throw new IllegalArgumentException("Invalid strategy name");
-            }
-            return switch (type) {
-                case CONSOLE -> new ConsolePrintStrategy();
-                case FILE -> new OutputFilePrintStrategy(args[0]);
-            };
-        }
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-        catch (IllegalArgumentException ex) {
-            System.out.println(ex.getMessage());
+public class PrintStrategyFactory {
+    private static final Logger logger = LogManager.getLogger(PrintStrategyFactory.class);
+    public static PrintStrategy createStrategy(String url) {
+        String[] args = url.split(" ");
+        PrintType type = PrintType.fromString(args[0]);
+        if (type == null) {
+            logger.error("Invalid type: " + type.text);
+            return null;
         }
-        return switch (strategyName) {
-            case "CONSOLE" -> new ConsolePrintStrategy();
-            case "FILE" -> new OutputFilePrintStrategy(args[0]);
-            default -> null;
+        return switch (type) {
+            case CONSOLE -> new ConsolePrintStrategy();
+            case FILE -> new OutputFilePrintStrategy(args[1]);
         };
+
     }
 }

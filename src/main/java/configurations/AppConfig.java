@@ -2,11 +2,9 @@ package configurations;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@ComponentScan(basePackages = {"main_components", "shop"})
-@PropertySource("classpath:config.properties")
+@ComponentScan(basePackages = {"main_components"})
 public class AppConfig {
 
 //    @Inject
@@ -16,9 +14,8 @@ public class AppConfig {
 //        //System.out.println("Environment " + env.toString());
 //    }
 //    @Bean(name = "shop")
-//    public Shop createShop() {
-//        return new Shop(env.getProperty("driverClass"), env.getProperty("url"), env.getProperty("username"),
-//                env.getProperty("password"));
+//    public Receiver createReceiver() {
+//        return new Receiver();
 //    }
 //
 //    @Bean(name = "invoker")

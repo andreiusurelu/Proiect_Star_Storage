@@ -2,13 +2,13 @@ package commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import main_components.Shop;
+import main_components.Receiver;
 
 public class Help implements SimpleCommand{
     private static final Logger logger = LogManager.getLogger(Help.class);
-    private Shop shop;
-    public Help(Shop shop) {
-        this.shop = shop;
+    private Receiver receiver;
+    public Help(Receiver receiver) {
+        this.receiver = receiver;
     }
 
     @Override
@@ -37,8 +37,8 @@ public class Help implements SimpleCommand{
                         "\tSWITCH DISPLAY_MODE FILE ${FILE_PATH} -- program will print the results in" +
                         "the file. If the file doesn't exist, it will be created automatically\n" +
                         "\tUNDO -- undo the latest executed command");
-        shop.write("HELP");
-        shop.write(
+        receiver.write("HELP");
+        receiver.write(
                 "List of commands:\n\n" +
                         "\tADD NEW CATEGORY ${NAME} -- adds a new category of products\n" +
                         "\tADD NEW PRODUCT ${NAME} ${CATEGORY} ${QUANTITY} ${PRICE} ${MAXQUANTITY} " +

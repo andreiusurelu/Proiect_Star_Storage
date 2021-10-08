@@ -31,11 +31,14 @@ public class OutputFilePrintStrategy implements PrintStrategy{
             }
             File file = new File(extractedFilePath);
             if (file.createNewFile()) {
-                this.bufferedWriter = new BufferedWriter(new FileWriter(file, true));
+                logger.info("Output file created.");
+                bufferedWriter = new BufferedWriter(new FileWriter(file));
             }
             else {
-                logger.error("Failed to create file.");
+                logger.info("Output file already exists, messages will be appended.");
+                bufferedWriter = new BufferedWriter(new FileWriter(file, true));
             }
+            this.filePath = extractedFilePath;
         }
         catch (IOException e) {
             logger.error("Can't open file");

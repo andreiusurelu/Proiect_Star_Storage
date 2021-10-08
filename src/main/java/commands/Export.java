@@ -1,17 +1,17 @@
 package commands;
 
 import org.apache.commons.lang3.SystemUtils;
-import main_components.Shop;
+import main_components.Receiver;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Export implements SimpleCommand{
-    private Shop shop;
+    private Receiver receiver;
     private final String outputPath;
     private static final Logger logger = LogManager.getLogger(Export.class);
-    public Export(Shop shop, String outputPath) {
-        this.shop = shop;
+    public Export(Receiver receiver, String outputPath) {
+        this.receiver = receiver;
         String extractedPath = outputPath.replaceAll("\"","");
         if (SystemUtils.IS_OS_WINDOWS) {
             this.outputPath = extractedPath.replace("\\", "\\\\");
@@ -25,7 +25,7 @@ public class Export implements SimpleCommand{
     @Override
     public void execute() {
         logger.info("EXPORT " + outputPath);
-        shop.write("EXPORT " + outputPath);
-        shop.exportData("JSON", outputPath);
+        receiver.write("EXPORT " + outputPath);
+        receiver.exportData("JSON", outputPath);
     }
 }

@@ -2,7 +2,7 @@ package parsers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import main_components.Shop;
+import main_components.Receiver;
 import utils.Constants;
 
 import java.io.FileWriter;
@@ -28,7 +28,7 @@ public class XMLParser implements Parser{
     }
 
     @Override
-    public void writeToFile(Shop shop) {
+    public void writeToFile(Receiver receiver) {
         //Coming soon!
 //        EntityManager entityManager = factory.createEntityManager();
 //        try {

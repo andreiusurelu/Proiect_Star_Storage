@@ -2,15 +2,15 @@ package commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import main_components.Shop;
+import main_components.Receiver;
 
 public class PrintProducts implements SimpleCommand{
-    private Shop shop;
+    private Receiver receiver;
     private final String productName;
     private static final Logger logger = LogManager.getLogger(PrintProducts.class);
 
-    public PrintProducts(Shop shop, String product) {
-        this.shop = shop;
+    public PrintProducts(Receiver receiver, String product) {
+        this.receiver = receiver;
         this.productName = product;
     }
 
@@ -19,7 +19,7 @@ public class PrintProducts implements SimpleCommand{
     @Override
     public void execute(){
         logger.info("PRINT PRODUCTS " + productName);
-        shop.write("PRINT PRODUCTS " + productName);
-        shop.showProduct(productName);
+//        receiver.write("PRINT PRODUCTS " + productName);
+        receiver.showProduct(productName);
     }
 }
