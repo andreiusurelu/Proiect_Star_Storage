@@ -8,16 +8,21 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = "Consumer.findByName", query = "SELECT c FROM Consumer c WHERE c.consumerUsername " +
                 "= :consumerUsername"),
-        @NamedQuery(name = "Consumer.printEntries", query = "SELECT c FROM Consumer c ORDER BY c.ID")
+        @NamedQuery(name = "Consumer.fetchEntries", query = "SELECT c FROM Consumer c ORDER BY c.ID"),
+        @NamedQuery(name = "Consumer.buyProduct", query = "UPDATE Consumer c " +
+                "SET c.consumerBalance = consumerBalance - (:quantity * :price)" +
+                " WHERE c.consumerUsername = :username"),
+        @NamedQuery(name = "Consumer.undoBuyProduct", query = "UPDATE Consumer c " +
+                "SET c.consumerBalance = consumerBalance + (:quantity * :price)" +
+                " WHERE c.consumerUsername = :username")
 })
 public class Consumer implements Serializable {
 
     @Id
-    @Column(name = "consumerID", unique = true, nullable = false)
+    @Column(name = "consumerID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
 
-    @Basic
     @Column(name = "consumerUsername", unique = true, nullable = false)
     private String consumerUsername;
 
@@ -26,10 +31,6 @@ public class Consumer implements Serializable {
 
     public int getID() {
         return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     public String getConsumerUsername() {
@@ -46,13 +47,5 @@ public class Consumer implements Serializable {
 
     public void setConsumerBalance(int consumerBalance) {
         this.consumerBalance = consumerBalance;
-    }
-
-    public void decrement(int balance) {
-        consumerBalance -= balance;
-    }
-
-    public void increment(int balance) {
-        consumerBalance += balance;
     }
 }

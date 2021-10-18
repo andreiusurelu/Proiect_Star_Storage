@@ -42,9 +42,12 @@ public final class Constants {
         return name == null || name.isBlank() || !StringUtils.isAlpha(name);
     }
 
+    public static boolean isIncorrectNumber(int number) {
+        return number <= 0;
+    }
+
     public static boolean isIncorrectNumber(String number) {
         try {
-            System.out.println(number);
             int n = Integer.parseInt(number);
             return n <= 0;
         }

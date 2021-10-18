@@ -8,6 +8,7 @@ import main_components.Receiver;
 
 public class AddNewProduct implements UndoableCommand{
     private Receiver receiver;
+    private int ID;
     private final String name;
     private final String category;
     private final String quantityString;
@@ -31,7 +32,10 @@ public class AddNewProduct implements UndoableCommand{
                 + category + " " + quantityString + " " + priceString + " " + maxQuantityString);
         receiver.write("ADD NEW PRODUCT " + name + " "
                 + category + " " + quantityString + " " + priceString + " " + maxQuantityString);
-        receiver.addNewProduct(name, category, quantityString, priceString, maxQuantityString);
+        ID = receiver.addNewProduct(name, category, quantityString, priceString, maxQuantityString);
+        if (ID == -1) {
+            logger.error("Failed to create a new product!");
+        }
     }
 
     @Override
@@ -40,7 +44,7 @@ public class AddNewProduct implements UndoableCommand{
                 quantityString + " " + priceString + " " + maxQuantityString);
         receiver.write("Action undone: ADD NEW PRODUCT " + name + " " + category + " " +
                 quantityString + " " + priceString + " " + maxQuantityString);
-        receiver.undoAddNewProduct(name, category, quantityString, priceString, maxQuantityString);
+        receiver.undoAddNewProduct(ID);
     }
 
 }

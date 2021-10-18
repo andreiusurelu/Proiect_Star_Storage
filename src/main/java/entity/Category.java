@@ -2,7 +2,6 @@ package entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "categories")
@@ -10,25 +9,26 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "Category.findByName",
                 query = "SELECT c FROM Category c WHERE c.name = :categoryName"),
-        @NamedQuery(name = "Category.printEntriesName", query = "SELECT c.name FROM Category c ORDER BY c.ID"),
-        @NamedQuery(name = "Category.printEntries", query = "SELECT c FROM Category c ORDER BY c.ID")
+        @NamedQuery(name = "Category.fetchEntriesNameOnly",
+                query = "SELECT c.name FROM Category c ORDER BY c.id"),
+        @NamedQuery(name = "Category.fetchEntries", query = "SELECT c FROM Category c ORDER BY c.id"),
+        @NamedQuery(name = "Category.deleteEntry", query = "DELETE FROM Category c WHERE c.id = :id")
 })
 public class Category implements Serializable {
 
     @Id
-    @Column(name = "categoryID", unique = true, nullable = false)
+    @Column(name = "categoryID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ID;
+    private int id;
 
-    @Basic
     @Column(name = "categoryName", unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     public String getName() {

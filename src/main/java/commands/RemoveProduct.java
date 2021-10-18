@@ -20,17 +20,17 @@ public class RemoveProduct implements UndoableCommand{
     public void execute(){
         logger.info("REMOVE PRODUCT " + productName);
         receiver.write("REMOVE PRODUCT " + productName);
-        removedProduct = receiver.fetchProductByName(productName);
-        receiver.removeProduct(productName);
+        removedProduct = receiver.removeProduct(productName);
+        if (removedProduct == null) {
+            logger.error("Could not remove product. Check for any errors.");
+        }
     }
 
     @Override
     public void undo() {
         logger.info("Action undone: REMOVE PRODUCT " + productName);
         receiver.write("Action undone: REMOVE PRODUCT " + productName);
-        receiver.addNewProduct(removedProduct.getName(), removedProduct.getCategory(),
-                removedProduct.getQuantity(), removedProduct.getPrice(),
-                removedProduct.getMaxQuantity());
+        receiver.addNewProduct(removedProduct);
     }
 
 }

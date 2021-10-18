@@ -9,45 +9,43 @@ import java.io.Serializable;
         @NamedQuery(name = "Product.findByFields", query = "SELECT p FROM Product p WHERE p.name = :productName " +
                 "AND p.category = :productCategory AND p.quantity = :productQuantity AND p.price = :productPrice " +
                 "AND p.maxQuantity = :productMaxQuantity"),
-        @NamedQuery(name = "Product.findByName", query = "SELECT p FROM Product p WHERE p.name = :productName"),
-        @NamedQuery(name = "Product.printEntries", query = "SELECT p FROM Product p ORDER BY p.ID"),
-        @NamedQuery(name = "Product.printByCategoryName", query = "SELECT p FROM Product p WHERE p.category.name = " +
-                ":categoryName ORDER BY p.ID"),
-        @NamedQuery(name = "Product.printByCategory", query = "SELECT p FROM Product p WHERE p.category = :category")
+        @NamedQuery(name = "Product.fetchByName", query = "SELECT p FROM Product p WHERE p.name = :productName"),
+        @NamedQuery(name = "Product.fetchEntries", query = "SELECT p FROM Product p ORDER BY p.id"),
+        @NamedQuery(name = "Product.fetchByCategoryName", query = "SELECT p FROM Product p WHERE p.category.name = " +
+                ":categoryName ORDER BY p.id"),
+        @NamedQuery(name = "Product.fetchByCategory", query = "SELECT p FROM Product p WHERE p.category = :category"),
+        @NamedQuery(name = "Product.decrement", query = "UPDATE Product p SET p.quantity = p.quantity - :quantity " +
+                "WHERE p.name = :name AND p.quantity >= :quantity"),
+        @NamedQuery(name = "Product.increment", query = "UPDATE Product p SET p.quantity = p.quantity + :quantity " +
+                "WHERE p.name = :name AND p.quantity + :quantity <= p.maxQuantity"),
+        @NamedQuery(name = "Product.deleteEntry", query = "DELETE FROM Product p WHERE p.id = :id"),
+        @NamedQuery(name = "Product.fetchPriceByName", query = "SELECT p.price FROM Product p WHERE p.name = :name")
 })
 public class Product implements Serializable{
 
     @Id
-    @Column(name = "productID", unique = true, nullable = false)
+    @Column(name = "productID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ID;
+    private int id;
 
-    @Basic
     @Column(name = "productName", unique = true, nullable = false)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "productCategory", referencedColumnName = "categoryName", nullable = false)
+    @JoinColumn(name = "productCategory", referencedColumnName = "categoryID", nullable = false)
     private Category category;
 
-    @Basic
     @Column(name = "productQuantity", nullable = false)
     private int quantity;
 
-    @Basic
     @Column(name = "productPrice", nullable = false)
     private int price;
 
-    @Basic
     @Column(name = "productMaxQuantity", nullable = false)
     private int maxQuantity;
 
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -95,11 +93,4 @@ public class Product implements Serializable{
         return name + " " + quantity + " " + price;
     }
 
-    public void decrement(long quantity) {
-        this.quantity -= quantity;
-    }
-
-    public void increment(long quantity) {
-        this.quantity += quantity;
-    }
 }

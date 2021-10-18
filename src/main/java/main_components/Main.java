@@ -13,7 +13,7 @@ public class Main {
 
         try (Scanner scan = new Scanner(System.in)) {
             ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-            Client client = context.getBean("concreteClient", ConcreteClient.class);
+            Client client = context.getBean(Client.class);
 
             System.out.println("Type HELP to show available commands");
 

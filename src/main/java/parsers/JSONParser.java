@@ -45,8 +45,8 @@ public class JSONParser implements Parser{
     public void writeToFile(Receiver receiver) {
         EntityManager entityManager = factory.createEntityManager();
         try {
-            List<Category> categoryList = entityManager.createNamedQuery("Category.printEntries").getResultList();
-            List<Consumer> consumerList = entityManager.createNamedQuery("Consumer.printEntries").getResultList();
+            List<Category> categoryList = entityManager.createNamedQuery("Category.fetchEntries").getResultList();
+            List<Consumer> consumerList = entityManager.createNamedQuery("Consumer.fetchEntries").getResultList();
 
             if (consumerList.isEmpty()) {
                 logger.error("Consumer list is empty!");
@@ -76,7 +76,7 @@ public class JSONParser implements Parser{
             ArrayNode consumerArray = mapper.createArrayNode();
 
             for (Category category : categoryList) {
-                List<Product> productList = entityManager.createNamedQuery("Product.printByCategory")
+                List<Product> productList = entityManager.createNamedQuery("Product.fetchByCategory")
                         .setParameter("category", category).getResultList();
                 for (Product product : productList) {
                     ObjectNode productObj = mapper.createObjectNode();
