@@ -1,6 +1,6 @@
 package main_components;
 
-import configurations.AppConfig;
+import main.java.configurations.AppConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
