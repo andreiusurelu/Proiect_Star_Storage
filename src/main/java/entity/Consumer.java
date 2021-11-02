@@ -6,15 +6,13 @@ import java.io.Serializable;
 @Entity
 @Table(name = "consumers")
 @NamedQueries({
-        @NamedQuery(name = "Consumer.findByName", query = "SELECT c FROM Consumer c WHERE c.consumerUsername " +
+        @NamedQuery(name = "Consumer.fetchEntryByName", query = "SELECT c FROM Consumer c WHERE c.consumerUsername " +
                 "= :consumerUsername"),
         @NamedQuery(name = "Consumer.fetchEntries", query = "SELECT c FROM Consumer c ORDER BY c.ID"),
-        @NamedQuery(name = "Consumer.buyProduct", query = "UPDATE Consumer c " +
-                "SET c.consumerBalance = consumerBalance - (:quantity * :price)" +
-                " WHERE c.consumerUsername = :username"),
-        @NamedQuery(name = "Consumer.undoBuyProduct", query = "UPDATE Consumer c " +
-                "SET c.consumerBalance = consumerBalance + (:quantity * :price)" +
-                " WHERE c.consumerUsername = :username")
+        @NamedQuery(name = "Consumer.decreaseBalance", query = "UPDATE Consumer c " +
+                "SET c.consumerBalance = c.consumerBalance - :balance WHERE c.ID = :id " +
+                "AND :balance <= c.consumerBalance"),
+        @NamedQuery(name = "Consumer.deleteEntry", query = "DELETE FROM Consumer c WHERE c.ID = :id")
 })
 public class Consumer implements Serializable {
 

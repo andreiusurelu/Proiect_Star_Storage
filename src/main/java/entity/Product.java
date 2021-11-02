@@ -11,13 +11,13 @@ import java.io.Serializable;
                 "AND p.maxQuantity = :productMaxQuantity"),
         @NamedQuery(name = "Product.fetchByName", query = "SELECT p FROM Product p WHERE p.name = :productName"),
         @NamedQuery(name = "Product.fetchEntries", query = "SELECT p FROM Product p ORDER BY p.id"),
-        @NamedQuery(name = "Product.fetchByCategoryName", query = "SELECT p FROM Product p WHERE p.category.name = " +
-                ":categoryName ORDER BY p.id"),
+        @NamedQuery(name = "Product.fetchEntriesByCategory", query = "SELECT p FROM Product p WHERE p.category.id = " +
+                ":id ORDER BY p.id"),
         @NamedQuery(name = "Product.fetchByCategory", query = "SELECT p FROM Product p WHERE p.category = :category"),
         @NamedQuery(name = "Product.decrement", query = "UPDATE Product p SET p.quantity = p.quantity - :quantity " +
-                "WHERE p.name = :name AND p.quantity >= :quantity"),
+                "WHERE p.id = :id AND p.quantity >= :quantity"),
         @NamedQuery(name = "Product.increment", query = "UPDATE Product p SET p.quantity = p.quantity + :quantity " +
-                "WHERE p.name = :name AND p.quantity + :quantity <= p.maxQuantity"),
+                "WHERE p.id = :id AND p.quantity + :quantity <= p.maxQuantity"),
         @NamedQuery(name = "Product.deleteEntry", query = "DELETE FROM Product p WHERE p.id = :id"),
         @NamedQuery(name = "Product.fetchPriceByName", query = "SELECT p.price FROM Product p WHERE p.name = :name")
 })
@@ -43,6 +43,10 @@ public class Product implements Serializable{
 
     @Column(name = "productMaxQuantity", nullable = false)
     private int maxQuantity;
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
