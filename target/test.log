@@ -1,0 +1,28 @@
+17:54:00.375 [main] INFO  commands.PrintProductsAll - PRINT PRODUCTS ALL
+17:54:00.497 [main] INFO  dataprocessing.ConsolePrintStrategy - 1 MILK 2 FOOD
+17:54:00.497 [main] INFO  shop.Shop - 1 MILK 2 FOOD
+17:54:00.497 [main] INFO  dataprocessing.ConsolePrintStrategy - 2 BREAD 6 FOOD
+17:54:00.497 [main] INFO  shop.Shop - 2 BREAD 6 FOOD
+17:54:00.497 [main] INFO  dataprocessing.ConsolePrintStrategy - 3 PANTS 20 CLOTHES
+17:54:00.498 [main] INFO  shop.Shop - 3 PANTS 20 CLOTHES
+17:54:00.498 [main] INFO  dataprocessing.ConsolePrintStrategy - 4 SOCKS 10 CLOTHES
+17:54:00.498 [main] INFO  shop.Shop - 4 SOCKS 10 CLOTHES
+17:54:00.498 [main] INFO  dataprocessing.ConsolePrintStrategy - 5 COLA 20 DRINKS
+17:54:00.498 [main] INFO  shop.Shop - 5 COLA 20 DRINKS
+17:54:00.499 [main] INFO  dataprocessing.ConsolePrintStrategy - 6 SPRITE 10 DRINKS
+17:54:00.499 [main] INFO  shop.Shop - 6 SPRITE 10 DRINKS
+17:54:00.499 [main] INFO  dataprocessing.ConsolePrintStrategy - 7 PHONE 10 ELECTRONICS
+17:54:00.499 [main] INFO  shop.Shop - 7 PHONE 10 ELECTRONICS
+17:54:00.499 [main] INFO  dataprocessing.ConsolePrintStrategy - 8 SCHWEPPES 30 DRINKS
+17:54:00.499 [main] INFO  shop.Shop - 8 SCHWEPPES 30 DRINKS
+17:54:00.500 [main] INFO  dataprocessing.ConsolePrintStrategy - 9 JEANS 50 CLOTHES
+17:54:00.500 [main] INFO  shop.Shop - 9 JEANS 50 CLOTHES
+17:54:00.500 [main] INFO  dataprocessing.ConsolePrintStrategy - 10 BEANS 50 FOOD
+17:54:00.500 [main] INFO  shop.Shop - 10 BEANS 50 FOOD
+17:54:00.501 [main] INFO  dataprocessing.ConsolePrintStrategy - 11 EGGS 36 FOOD
+17:54:00.501 [main] INFO  shop.Shop - 11 EGGS 36 FOOD
+17:54:00.501 [main] INFO  dataprocessing.ConsolePrintStrategy - 12 CHOCOLATE 40 FOOD
+17:54:00.501 [main] INFO  shop.Shop - 12 CHOCOLATE 40 FOOD
+17:57:16.887 [main] INFO  commands.Exit - EXIT
+17:57:16.887 [main] INFO  commands.Exit - Quitting program...
+17:57:16.888 [main] INFO  dataprocessing.ConsolePrintStrategy - Quitting program...
